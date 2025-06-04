@@ -1,6 +1,7 @@
  import AiServices from "@/components/dashboard-sidebar/ai-services/AiServices";
 import Blog from "@/components/dashboard-sidebar/blog/Blog";
-import MspServices from "@/components/dashboard-sidebar/msp-services/MspServices";
+import { Leads } from "@/components/dashboard-sidebar/leads/Leads";
+ import MspServices from "@/components/dashboard-sidebar/msp-services/MspServices";
 
 const DashboardPage =async ({ params }) => {
   const { menu } = await params;
@@ -14,6 +15,8 @@ const DashboardPage =async ({ params }) => {
         return <AiServices />;
       case "MspServices":
         return <MspServices />;
+        case "Leads":
+          return <Leads/>;
       default:
         return (
           <div className="text-center py-8">

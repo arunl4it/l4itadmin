@@ -13,3 +13,8 @@ export async function setAuthCookie(token) {
     sameSite: 'strict'
   });
 }
+
+export async function logout() {
+  cookies().delete('token');
+  return { redirect: '/' };
+}
