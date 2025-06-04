@@ -151,14 +151,14 @@ export default function LandingPage() {
           </Button>
         </form>
 
-        <div className="mt-4 text-center">
+        {/* <div className="mt-4 text-center">
           <Link
             href="/forgot-password"
             className="text-sm text-blue-600 hover:underline"
           >
             Forgot password?
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

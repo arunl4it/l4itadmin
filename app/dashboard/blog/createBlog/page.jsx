@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { getCookie } from "cookies-next";
-
+import "froala-editor/css/froala_editor.pkgd.min.css";
+import "froala-editor/css/froala_style.min.css";
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function CreateBlogPage() {
