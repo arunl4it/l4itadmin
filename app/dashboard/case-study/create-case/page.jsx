@@ -8,7 +8,7 @@ import "froala-editor/css/froala_editor.pkgd.min.css";
 import "froala-editor/css/froala_style.min.css";
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-export default function CreateCaseStudyPage() {
+export default function CreateCasePage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -63,7 +63,7 @@ export default function CreateCaseStudyPage() {
       uploadFormData.append("slug", formData.slug);
       uploadFormData.append("short_description", formData.shortDescription);
       uploadFormData.append("heading", formData.heading);
-      uploadFormData.append("type", "blog");
+      uploadFormData.append("type", "case");
       uploadFormData.append("meta_description", formData.metaDescription);
 
       const response = await fetch(`${API_BASE_URL}/blog`, {
@@ -73,15 +73,16 @@ export default function CreateCaseStudyPage() {
         },
         body: uploadFormData,
       });
+console.log("response",response);
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Case creation failed");
+        throw new Error(errorData.message || "case study creation failed");
       }
 
       const data = await response.json();
-      console.log("Case created successfully:", data);
-      toast.success("Case study created successfully!");
+      console.log("case study created successfully:", data);
+      toast.success("case study created successfully!");
       router.push("/dashboard/CaseStudy");
     } catch (error) {
       console.error("Creation error:", error);
