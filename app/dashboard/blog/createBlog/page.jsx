@@ -8,7 +8,10 @@ import "froala-editor/css/froala_editor.pkgd.min.css";
 import "froala-editor/css/froala_style.min.css";
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-export default function CreateCaseStudyPage() {
+ 
+// console.log(API_BASE_URL);
+
+export default function CreateBlogyPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -73,16 +76,17 @@ export default function CreateCaseStudyPage() {
         },
         body: uploadFormData,
       });
+      console.log("response from api",response);
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Case creation failed");
+        throw new Error(errorData.message || "Blogc reation failed");
       }
 
       const data = await response.json();
-      console.log("Case created successfully:", data);
-      toast.success("Case study created successfully!");
-      router.push("/dashboard/CaseStudy");
+      console.log("Blog successfully:", data);
+      toast.success("Blog created successfully!");
+      router.push("/dashboard/Blog");
     } catch (error) {
       console.error("Creation error:", error);
       setError(error.message || "Failed to create case study");
@@ -93,7 +97,7 @@ export default function CreateCaseStudyPage() {
   };
 
   const handleCancel = () => {
-    router.push("/dashboard/CaseStudy");
+    router.push("/dashboard/Blog");
   };
 
   return (

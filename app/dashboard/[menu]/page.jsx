@@ -1,12 +1,68 @@
- import AiServices from "@/components/dashboard-sidebar/ai-services/AiServices";
+import AiServices from "@/components/dashboard-sidebar/ai-services/AiServices";
 import Blog from "@/components/dashboard-sidebar/blog/Blog";
 import CaseStudy from "@/components/dashboard-sidebar/case-study/CaseStudy";
 import { Leads } from "@/components/dashboard-sidebar/leads/Leads";
- import MspServices from "@/components/dashboard-sidebar/msp-services/MspServices";
+import MspServices from "@/components/dashboard-sidebar/msp-services/MspServices";
+import {
+  Home,
+  ClipboardCheck,
+  Brain,
+  Network,
+  ContactRound,
+  NotebookPen
+} from "lucide-react";
 
-const DashboardPage =async ({ params }) => {
-  const { menu } = await params;
-  // console.log("menu",menu);
+export const menuItems = [
+  {
+    id: 1,
+    name: "Dashboard",
+    href: "",
+    icon: Home,
+  },
+  {
+    id: 2,
+    name: "Blog",
+    href: "Blog",
+    icon: ClipboardCheck,
+  },
+  {
+    id: 3,
+    name: "AI Services",
+    href: "AiServices",
+    icon: Brain,
+  },
+  {
+    id: 4,
+    name: "MSP Services",
+    href: "MspServices",
+    icon: Network,
+  },
+  {
+    id: 5,
+    name: "Leads",
+    href: "Leads",
+    icon: ContactRound,
+  },
+  {
+    id: 6,
+    name: "Case Study",
+    href: "CaseStudy",
+    icon: NotebookPen,
+  },
+];
+
+// Use the menuItems to generate static params
+export async function generateStaticParams() {
+  // Filter out the Dashboard item since it has empty href
+  return menuItems
+    .filter(item => item.href)
+    .map(item => ({ 
+      menu: item.href 
+    }));
+}
+
+const DashboardPage = ({ params }) => {
+  const { menu } = params;
 
   const renderContent = () => {
     switch (menu) {
@@ -16,10 +72,10 @@ const DashboardPage =async ({ params }) => {
         return <AiServices />;
       case "MspServices":
         return <MspServices />;
-        case "Leads":
-          return <Leads/>;
-          case "CaseStudy":
-            return <CaseStudy/>;
+      case "Leads":
+        return <Leads />;
+      case "CaseStudy":
+        return <CaseStudy />;
       default:
         return (
           <div className="text-center py-8">
@@ -34,7 +90,7 @@ const DashboardPage =async ({ params }) => {
     }
   };
 
-  return <div className="w-full ">{renderContent()}</div>;
+  return <div className="w-full">{renderContent()}</div>;
 };
 
 export default DashboardPage;

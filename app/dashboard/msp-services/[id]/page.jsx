@@ -8,11 +8,29 @@ import { toast } from "react-hot-toast";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-export default function AiServicesDetails() {
+// Static generation function
+export async function generateStaticParams() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/blog?type=msp`);
+    
+    if (!res.ok) {
+      console.error("Failed to fetch MSP services for static generation");
+      return [];
+    }
+    
+    const services = await res.json();
+    return services.map((service) => ({
+      id: service.id.toString(),
+    }));
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
+
+export default function MspServicesDetails() {
   const router = useRouter();
   const { id } = useParams();
-  //   console.log(id);
-
   const token = getCookie("token");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -44,12 +62,12 @@ export default function AiServicesDetails() {
     return errors;
   };
 
-  // Fetch blog data
+  // Fetch MSP service data
   useEffect(() => {
     const fetchMspService = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/blog/${id}`);
-        if (!res.ok) throw new Error("Failed to fetch blog");
+        if (!res.ok) throw new Error("Failed to fetch MSP service");
         const data = await res.json();
         setMspId(data.id);
         setInitialData({
@@ -59,8 +77,8 @@ export default function AiServicesDetails() {
           meta_description: data.meta_description || "",
         });
       } catch (error) {
-        console.error("Fetch blog error:", error);
-        toast.error("Failed to load blog data");
+        console.error("Fetch MSP service error:", error);
+        toast.error("Failed to load MSP service data");
       }
     };
 
@@ -70,8 +88,6 @@ export default function AiServicesDetails() {
   }, [id]);
 
   const handleSubmit = async (formData) => {
-    console.log("formData", formData);
-
     setIsSubmitting(true);
     setError("");
 
@@ -114,14 +130,12 @@ export default function AiServicesDetails() {
         throw new Error(errorData.message || "MSP service update failed");
       }
 
-      const data = await response.json();
-      //   console.log("service updated successfully:", data);
-      toast.success("Blog updated successfully!");
+      toast.success("MSP service updated successfully!");
       router.push("/dashboard/MspServices");
     } catch (error) {
       console.error("Update error:", error);
-      setError(error.message || "Failed to update blog");
-      toast.error(error.message || "Failed to update blog");
+      setError(error.message || "Failed to update MSP service");
+      toast.error(error.message || "Failed to update MSP service");
     } finally {
       setIsSubmitting(false);
     }

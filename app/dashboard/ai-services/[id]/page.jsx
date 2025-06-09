@@ -8,17 +8,34 @@ import { toast } from "react-hot-toast";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
+// This function runs at build time to generate static paths
+export async function generateStaticParams() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/blog/type/aiservices`);
+    
+    if (!res.ok) {
+      console.error("Failed to fetch AI services for static generation");
+      return [];
+    }
+    
+    const services = await res.json();
+    return services.map((service) => ({
+      id: service.id.toString(),
+    }));
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
+
 export default function AiServicesDetails() {
   const router = useRouter();
   const { id } = useParams();
-//   console.log(id);
-  
   const token = getCookie("token");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [initialData, setInitialData] = useState(null);
-  const[aiId,setAiId]=useState(null)
-   
+  const [aiId, setAiId] = useState(null);
 
   // Redirect to home if token is missing
   useEffect(() => {
@@ -48,7 +65,7 @@ export default function AiServicesDetails() {
         const res = await fetch(`${API_BASE_URL}/blog/${id}`);
         if (!res.ok) throw new Error("Failed to fetch blog");
         const data = await res.json();
-        setAiId(data.id)
+        setAiId(data.id);
         setInitialData({
           ...data,
           short_description: data.short_description || "",
@@ -62,13 +79,11 @@ export default function AiServicesDetails() {
     };
 
     if (id) {
-        fetchAiService();
+      fetchAiService();
     }
   }, [id]);
 
   const handleSubmit = async (formData) => {
-    console.log("formData",formData);
-    
     setIsSubmitting(true);
     setError("");
 
@@ -108,17 +123,16 @@ export default function AiServicesDetails() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Ai service update failed");
+        throw new Error(errorData.message || "AI service update failed");
       }
 
       const data = await response.json();
-      console.log("ai service updated successfully:", data);
-      toast.success("Blog updated successfully!");
+      toast.success("AI Service updated successfully!");
       router.push("/dashboard/AiServices");
     } catch (error) {
       console.error("Update error:", error);
-      setError(error.message || "Failed to update blog");
-      toast.error(error.message || "Failed to update blog");
+      setError(error.message || "Failed to update AI service");
+      toast.error(error.message || "Failed to update AI service");
     } finally {
       setIsSubmitting(false);
     }

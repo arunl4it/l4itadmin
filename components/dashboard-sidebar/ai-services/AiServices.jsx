@@ -29,7 +29,7 @@ export default function AiServices() {
   const getAllAiApiCall = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/blog/type/aiservices/?limit=100`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/blog/type/aiservices?limit=100`
       );
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
