@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { setAuthCookie } from "@/app/lib/actions/auth";
+// import { setAuthCookie } from "@/app/lib/actions/auth";
 
 export default function LandingPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,6 +14,13 @@ export default function LandingPage() {
   const [error, setError] = useState("");
 
   const route = useRouter();
+
+  const setCookie = (name, value, days = 7) => {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    const expires = `expires=${date.toUTCString()}`;
+    document.cookie = `${name}=${value}; ${expires}; path=/`;
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -66,7 +73,9 @@ export default function LandingPage() {
       //     process.env.NODE_ENV === "production" ? "; Secure" : ""
       //   }`;
 
-      await setAuthCookie(data.access_token || "");
+      // await setAuthCookie(data.access_token || "");
+
+      setCookie("token", data.access_token || "");
 
       route.push("/dashboard");
     } catch (error) {

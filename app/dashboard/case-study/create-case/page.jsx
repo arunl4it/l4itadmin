@@ -6,14 +6,18 @@ import { toast } from "react-hot-toast";
 import { getCookie } from "cookies-next";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 import "froala-editor/css/froala_style.min.css";
-const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+// const API_BASE_URL = "http://ai.l4it.net:8000/blog"
 
 export default function CreateCasePage() {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_CREATE_URL;
+
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const token = getCookie("token");
+
+  console.log("token", API_BASE_URL);
 
   const validateForm = (formData) => {
     const errors = {};
@@ -34,6 +38,8 @@ export default function CreateCasePage() {
   };
 
   const handleSubmit = async (formData) => {
+    console.log("API_BASE_URL", API_BASE_URL);
+
     setIsSubmitting(true);
     setError("");
 
@@ -73,7 +79,7 @@ export default function CreateCasePage() {
         },
         body: uploadFormData,
       });
-      console.log("response", response);
+      console.log("responsessss", response);
 
       if (!response.ok) {
         const errorData = await response.json();

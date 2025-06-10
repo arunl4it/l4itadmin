@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 import { getCookie } from "cookies-next";
 import BlogForm from "@/components/blog-form/BlogForm";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_CREATE_URL;
 
 export default function CreateAiServices() {
   const router = useRouter();
