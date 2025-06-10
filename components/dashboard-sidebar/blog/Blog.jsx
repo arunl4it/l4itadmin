@@ -46,6 +46,8 @@ export default function Blog() {
   };
 
   const handleBlogClick = (slug) => {
+    // console.log("slug blog",slug);
+
     router.push(`/dashboard/blog/${slug}`);
   };
 

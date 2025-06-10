@@ -11,7 +11,7 @@ export default function BlogForm({
   isEditing = false,
   onCancel,
   isSubmitting,
-  errors={},
+  errors = {},
   apiError,
 }) {
   const [formData, setFormData] = useState({
@@ -37,13 +37,12 @@ export default function BlogForm({
         metaDescription: initialData.meta_description || "",
         slug: initialData.slug || "",
       });
-  
+
       if (initialData.image) {
         setImagePreview(initialData.image);
       }
     }
   }, [initialData, isEditing]);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -189,7 +188,7 @@ export default function BlogForm({
           <div className="space-y-2">
             <label className="text-sm font-medium leading-none">Content</label>
             <MyFroalaEditor
-              model={formData.content}
+              model={formData.content || ""}
               setModel={handleContentChange}
             />
             {errors.content && (
