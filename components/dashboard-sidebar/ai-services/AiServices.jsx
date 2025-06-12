@@ -75,7 +75,7 @@ export default function AiServices() {
         <h2 className="text-3xl font-bold text-white dark:text-white">
           AI Services
         </h2>
-        <Link href="/dashboard/ai-services/create">
+        <Link href="/dashboard/ai-services/create-ai-service">
           <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
             New Post
           </button>
