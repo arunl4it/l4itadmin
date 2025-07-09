@@ -1,36 +1,27 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { getCookie } from "cookies-next";
+import ServiceForm from "@/components/service-form/Serviceform";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
-import Mspform from "../msp-form/Mspform";
+import { getCookie } from "cookies-next";
+import Mspform from "@/components/msp-form/Mspform";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_CREATE_URL;
 
-export default function AiserviceComponent() {
+export default function CreateBlogPage() {
   const router = useRouter();
-  const { id } = useParams();
-  const token = getCookie("token");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [initialData, setInitialData] = useState(null);
-  const [aiId, setAiId] = useState(null);
+  const token = getCookie("token");
   const [formErrors, setFormErrors] = useState({});
-
-  // Redirect to home if token is missing
-  useEffect(() => {
-    if (!token) {
-      router.push("/");
-    }
-  }, [token, router]);
 
   const validateForm = (formData) => {
     const errors = {};
 
     if (!formData.heading?.trim()) errors.heading = "Heading is required";
     if (!formData.slug?.trim()) errors.slug = "Slug is required";
-    if (!formData.metaTitle?.trim()) errors.metaTitle = "Meta title is required";
+    if (!formData.metaTitle?.trim())
+      errors.metaTitle = "Meta title is required";
     if (!formData.metaDescription?.trim())
       errors.metaDescription = "Meta description is required";
     if (!formData.imageFile && !formData.image)
@@ -39,44 +30,16 @@ export default function AiserviceComponent() {
     return errors;
   };
 
-  // Fetch blog data
-  useEffect(() => {
-    const fetchAiService = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/blog/${id}`);
-        if (!res.ok) throw new Error("Failed to fetch blog");
-        const data = await res.json();
-        setAiId(data.id);
-        
-        // Parse the blog_data_raw if it exists
-        const blogDataRaw = data.blog_data_raw ? JSON.parse(data.blog_data_raw) : {};
-        
-        setInitialData({
-          ...data,
-          meta_title: data.meta_title || "",
-          meta_description: data.meta_description || "",
-          short_description: data.short_description || "",
-          content: data.content || "",
-          // Spread the parsed blog_data_raw into initialData
-          ...blogDataRaw
-        });
-      } catch (error) {
-        console.error("Fetch blog error:", error);
-        toast.error("Failed to load blog data");
-      }
-    };
-  
-    if (id) {
-      fetchAiService();
-    }
-  }, [id]);
-
   const handleSubmit = async (formData) => {
+    // console.log("form datasss", formData);
+    
     setIsSubmitting(true);
     setError("");
 
     // Validate form
     const errors = validateForm(formData);
+    console.log("validation errors", errors);
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       setIsSubmitting(false);
@@ -84,27 +47,27 @@ export default function AiserviceComponent() {
       return;
     }
 
-    setFormErrors({});
-
     try {
       const uploadFormData = new FormData();
 
-      if (formData.imageFile instanceof File) {
+      // Append image
+      if (formData.imageFile) {
         uploadFormData.append("image", formData.imageFile);
       } else if (formData.image) {
         uploadFormData.append("image_url", formData.image);
       }
 
+      // Append basic fields
       uploadFormData.append("meta_title", formData.metaTitle);
       uploadFormData.append("content", formData.content || "");
       uploadFormData.append("slug", formData.slug);
       uploadFormData.append("short_description", formData.shortDescription || "");
       uploadFormData.append("heading", formData.heading);
-      uploadFormData.append("type", "aiservices");
+      uploadFormData.append("type", "newcase");
       uploadFormData.append("meta_description", formData.metaDescription);
 
-      // Prepare nested data matching the AI service structure
-      const serviceData = {
+      // Structure the blog data in the expected format
+      const blog_data_raw = {
         section1Title2: formData.section1Title2 || "",
         section1Content: formData.section1Content || "",
         section1Title21: formData.section1Title21 || "",
@@ -136,13 +99,14 @@ export default function AiserviceComponent() {
         section8Heading: formData.section8Heading || "",
         section8Subheading: formData.section8Subheading || "",
         section8Content: formData.section8Content || "",
-        faqs: formData.faqs || [],
       };
 
-      // Stringify the nested data
-      uploadFormData.append("blog_data_raw", JSON.stringify(serviceData));
+      // Append the structured blog data
+      uploadFormData.append("blog_data_raw", JSON.stringify(blog_data_raw));
 
-      const response = await fetch(`${API_BASE_URL}/blog/update/${aiId}`, {
+      console.log([...uploadFormData.entries()]);
+
+      const response = await fetch(`${API_BASE_URL}/blog`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -152,32 +116,31 @@ export default function AiserviceComponent() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "AI service update failed");
+        throw new Error(errorData.message || "Blog creation failed");
       }
 
       const data = await response.json();
-      toast.success("AI Service updated successfully!");
-      router.push("/dashboard/AiServices");
+      console.log("data", data);
+
+      toast.success("Blog created successfully!");
+      router.push("/dashboard/Blog");
     } catch (error) {
-      console.error("Update error:", error);
-      setError(error.message || "Failed to update AI service");
-      toast.error(error.message || "Failed to update AI service");
+      console.error("Creation error:", error);
+      setError(error.message || "Failed to create blog");
+      toast.error(error.message || "Failed to create blog");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleCancel = () => {
-    router.push("/dashboard/AiServices");
+    router.push("/dashboard/Blog");
   };
-
-  if (!initialData) return <div className="p-8">Loading...</div>;
 
   return (
     <Mspform
-      initialData={initialData}
       onSubmit={handleSubmit}
-      isEditing={true}
+      isEditing={false}
       onCancel={handleCancel}
       isSubmitting={isSubmitting}
       apiError={error}

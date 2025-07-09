@@ -22,6 +22,8 @@ export default function Blog() {
   const router = useRouter();
   const token = getCookie("token");
 
+  
+
   useEffect(() => {
     getAllBlogsApiCall();
   }, []);

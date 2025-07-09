@@ -41,6 +41,7 @@ export default function CreateBlogyPage() {
 
     // Validate form
     const errors = validateForm(formData);
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       setIsSubmitting(false);

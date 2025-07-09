@@ -44,4 +44,10 @@ export const menuItems = [
     href: "CaseStudy",
     icon: NotebookPen,
   },
+  // {
+  //   id: 7,
+  //   name: "New Service",
+  //   href: "Newservice",
+  //   icon: NotebookPen,
+  // },
 ];
