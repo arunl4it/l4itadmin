@@ -144,6 +144,10 @@ export default function CreateAiServices() {
           uploadFormData.append("image_url", formData.image);
         }
 
+        if (formData.thumbnailFile) {
+          uploadFormData.append("thumbnail", formData.thumbnailFile);
+        }
+
       // Append basic fields
       uploadFormData.append("meta_title", formData.metaTitle);
       uploadFormData.append("content", formData.content || ""); // Add content field

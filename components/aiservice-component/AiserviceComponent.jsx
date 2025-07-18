@@ -95,6 +95,10 @@ export default function AiserviceComponent() {
         uploadFormData.append("image_url", formData.image);
       }
 
+      if (formData.thumbnailFile) {
+        uploadFormData.append("thumbnail", formData.thumbnailFile);
+      }
+
       uploadFormData.append("meta_title", formData.metaTitle);
       uploadFormData.append("content", formData.content || "");
       uploadFormData.append("slug", formData.slug);

@@ -35,7 +35,7 @@ export default function MspServices() {
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
       setMspData(data);
-      // console.log(data);
+      console.log("data",data);
     } catch (error) {
       console.error("Fetch error:", error);
     }

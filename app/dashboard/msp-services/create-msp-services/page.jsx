@@ -63,8 +63,6 @@ export default function CreateMspServices() {
 
       if (formData.thumbnailFile) {
         uploadFormData.append("thumbnail", formData.thumbnailFile);
-      } else if (formData.thumnailimage) {
-        uploadFormData.append("thumbnail_url", formData.thumnailimage);
       }
 
       uploadFormData.append("meta_title", formData.metaTitle);
@@ -75,12 +73,13 @@ export default function CreateMspServices() {
         formData.shortDescription || ""
       );
       uploadFormData.append("heading", formData.heading);
+
       uploadFormData.append("type", "msp");
       uploadFormData.append("meta_description", formData.metaDescription);
 
       // Prepare nested data
       const serviceData = {
-        thumnailimage: formData.thumnailimage || "",
+        // thumnailimage: formData.thumnailimage || "",
         section1Title2: formData.section1Title2 || "",
         section1Content: formData.section1Content || "",
         section1Title21: formData.section1Title21 || "",
@@ -133,7 +132,7 @@ export default function CreateMspServices() {
       }
 
       const data = await response.json();
-        console.log("msp service created successfully:", data);
+      console.log("msp service created successfully:", data);
       toast.success("msp Service created successfully!");
       router.push("/dashboard/MspServices");
     } catch (error) {

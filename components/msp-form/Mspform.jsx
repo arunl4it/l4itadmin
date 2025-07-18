@@ -55,7 +55,7 @@ export default function ServiceForm({
     faqs: [],
   });
 
-  // console.log("form data",formData.faqs);
+  console.log("initial",initialData);
 
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
@@ -67,7 +67,7 @@ export default function ServiceForm({
 
       const parsedData = {
         image: initialData.image || "",
-        thumnailimage: serviceData.thumnailimage,
+        thumnailimage: initialData.thumbnail,
         heading: initialData.heading || "",
         section1Title2: serviceData.section1Title2 || "",
         section1Content: initialData.section1Content || "",
@@ -110,6 +110,9 @@ export default function ServiceForm({
 
       if (initialData.image) {
         setImagePreview(initialData.image);
+      }
+      if (initialData.thumbnail) {
+        setThumbnailPreview(initialData.thumbnail);
       }
     }
   }, [initialData, isEditing]);
@@ -271,13 +274,13 @@ export default function ServiceForm({
                       ? "Click to change image"
                       : "Or enter URL below"}
                   </p>
-                  <Input
+                  {/* <Input
                     name="thumnailimage"
                     value={formData.thumnailimage}
                     onChange={handleChange}
                     placeholder="Or enter thumbnail image URL"
                     className="border-gray-300 p-3 mt-2"
-                  />
+                  /> */}
                 </div>
               </div>
               {errors.thumnailimage && (

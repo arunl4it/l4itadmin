@@ -129,7 +129,6 @@ export default function ImageDirectory() {
       if (response.ok) {
         // setImages(images.filter((img) => img.id !== id));
         fetchImages();
-
       } else {
         console.error("Failed to delete image");
       }
@@ -175,12 +174,10 @@ export default function ImageDirectory() {
             {isUploading ? `Uploading... ${uploadProgress}%` : "Upload"}
           </button>
         </div>
-        
-          <p className="mt-2 ml-1.5 text-sm text-gray-600">
-            Possible formats : ( jpeg , jpg , png , webp)
-             
-          </p>
-      
+
+        <p className="mt-2 ml-1.5 text-sm text-gray-600">
+          Possible formats : ( jpeg , jpg , png , webp)
+        </p>
       </div>
 
       {/* Image List */}
@@ -219,7 +216,7 @@ export default function ImageDirectory() {
                   <div className="flex items-center">
                     <input
                       type="text"
-                      value={image.image}
+                      value={image.image || ""}
                       readOnly
                       className="flex-1 text-xs p-2 border rounded-l-md bg-gray-100 truncate"
                     />

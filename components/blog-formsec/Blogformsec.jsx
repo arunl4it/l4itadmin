@@ -268,7 +268,7 @@ export default function BlogFormsec({
                 </label>
                 <Input
                   name="metaTitle"
-                  value={formData.metaTitle}
+                  value={formData.metaTitle ||""}
                   onChange={handleChange}
                   placeholder="SEO-friendly title (50-60 characters)"
                   className="border-gray-300 p-4"
@@ -302,7 +302,7 @@ export default function BlogFormsec({
                 </label>
                 <Input
                   name="slug"
-                  value={formData.slug}
+                  value={formData.slug ||""}
                   onChange={handleChange}
                   placeholder="blog-post-url"
                   className="border-gray-300 p-4"
@@ -324,7 +324,7 @@ export default function BlogFormsec({
               </label>
               <Input
                 name="blogTitle"
-                value={formData.blogTitle}
+                value={formData.blogTitle||""}
                 onChange={handleChange}
                 placeholder="Enter blog title"
                 className="border-gray-300 p-4 text-gray-600 mt-1"
@@ -415,7 +415,7 @@ export default function BlogFormsec({
               </label>
               <Input
                 name="authorName"
-                value={formData.authorName}
+                value={formData.authorName ||""}
                 onChange={handleChange}
                 placeholder="Enter author name"
                 className="border-gray-300 p-4 text-gray-600 mt-1"
@@ -488,7 +488,7 @@ export default function BlogFormsec({
                 <div className="flex-1">
                   <Input
                     name="authorImage"
-                    value={formData.authorImage}
+                    value={formData.authorImage ||""}
                     onChange={handleChange}
                     placeholder="Enter author image URL (e.g., https://example.com/author.jpg)"
                     className="border-gray-300 p-4"
@@ -523,7 +523,7 @@ export default function BlogFormsec({
                   </svg>
                 </div>
                 <Input
-                  value={formData.authorSocialLinks.linkedin}
+                  value={formData.authorSocialLinks.linkedin ||""}
                   onChange={(e) =>
                     handleSocialLinkChange("linkedin", e.target.value)
                   }
@@ -549,7 +549,7 @@ export default function BlogFormsec({
                   </svg>
                 </div>
                 <Input
-                  value={formData.authorSocialLinks.github}
+                  value={formData.authorSocialLinks.github ||""}
                   onChange={(e) =>
                     handleSocialLinkChange("github", e.target.value)
                   }
@@ -575,7 +575,7 @@ export default function BlogFormsec({
                   </svg>
                 </div>
                 <Input
-                  value={formData.authorSocialLinks.instagram}
+                  value={formData.authorSocialLinks.instagram ||""}
                   onChange={(e) =>
                     handleSocialLinkChange("instagram", e.target.value)
                   }
@@ -601,7 +601,7 @@ export default function BlogFormsec({
                   </svg>
                 </div>
                 <Input
-                  value={formData.authorSocialLinks.facebook}
+                  value={formData.authorSocialLinks.facebook ||""}
                   onChange={(e) =>
                     handleSocialLinkChange("facebook", e.target.value)
                   }
@@ -660,7 +660,7 @@ export default function BlogFormsec({
                     Section Title (H2)
                   </label>
                   <Input
-                    value={section.title}
+                    value={section.title ||""}
                     onChange={(e) =>
                       handleSectionChange(sectionIndex, "title", e.target.value)
                     }
@@ -718,7 +718,7 @@ export default function BlogFormsec({
                           Heading
                         </label>
                         <Input
-                          value={point.heading}
+                          value={point.heading ||""}
                           onChange={(e) => {
                             const updatedPoints = [...section.points];
                             updatedPoints[pointIndex] = {
@@ -844,7 +844,7 @@ export default function BlogFormsec({
                     )}
                     <div className="flex-1">
                       <Input
-                        value={section.image}
+                        value={section.image ||""}
                         onChange={(e) =>
                           handleSectionChange(
                             sectionIndex,
@@ -875,7 +875,7 @@ export default function BlogFormsec({
                       Link Text (Optional)
                     </label>
                     <Input
-                      value={section.linkText}
+                      value={section.linkText ||""}
                       onChange={(e) =>
                         handleSectionChange(
                           sectionIndex,
@@ -892,7 +892,7 @@ export default function BlogFormsec({
                       Link URL (Optional)
                     </label>
                     <Input
-                      value={section.linkUrl}
+                      value={section.linkUrl ||""}
                       onChange={(e) =>
                         handleSectionChange(
                           sectionIndex,
