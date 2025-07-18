@@ -41,7 +41,7 @@ export default function Blog() {
 
       const data = await response.json();
       setBlogData(data);
-      console.log(data);
+      // console.log("blog data",data);
     } catch (error) {
       console.error("Fetch error:", error);
     }

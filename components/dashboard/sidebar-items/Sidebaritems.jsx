@@ -14,6 +14,9 @@ const SidebarItems = () => {
         // Check if current path is exactly /dashboard or starts with /dashboard/item.href
         const isActive = pathname === `/dashboard/${item.href}` || 
                         (pathname === '/dashboard' && item.href === '')
+
+                        console.log(item);
+                        
         
         return (
           <Link

@@ -43,7 +43,14 @@ export const menuItems = [
     name: "Case Study",
     href: "CaseStudy",
     icon: NotebookPen,
-  },
+  }, 
+  
+  {
+      id: 7,
+      name: "Image Upload",
+      href: "ImageDirectory",
+      icon: NotebookPen,
+    },
   // {
   //   id: 7,
   //   name: "New Service",

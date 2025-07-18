@@ -18,7 +18,7 @@ export default function MspComponent() {
   const [formErrors, setFormErrors] = useState({});
   const[mspId,setMspid]=useState(null)
 
-  // console.log("initialData",initialData);
+  console.log("initialData",initialData);
   
 
   // Redirect to home if token is missing

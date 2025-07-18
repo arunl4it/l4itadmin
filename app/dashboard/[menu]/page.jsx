@@ -5,6 +5,7 @@ import CaseStudy from "@/components/dashboard-sidebar/case-study/CaseStudy";
 import { Leads } from "@/components/dashboard-sidebar/leads/Leads";
 import MspServices from "@/components/dashboard-sidebar/msp-services/MspServices";
 import Newservice from "@/components/dashboard-sidebar/new-service/Newservice";
+import ImageDirectory from "@/components/dashboard-sidebar/upload/ImageDirectory";
 import {
   Home,
   ClipboardCheck,
@@ -86,6 +87,8 @@ const DashboardPage = ({ params }) => {
         return <CaseStudy />;
       case "Newservice":
         return <Newservice />;
+        case "ImageDirectory":
+          return <ImageDirectory />;
 
       default:
         return (

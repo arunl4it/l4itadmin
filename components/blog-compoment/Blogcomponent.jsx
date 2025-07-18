@@ -6,73 +6,20 @@ import { getCookie } from "cookies-next";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
 import BlogForm from "../blog-form/BlogForm";
+import BlogFormsec from "../blog-formsec/Blogformsec";
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Blogcomponent() {
-  //   const { id } = params;
-  // const params=useParams();
-  // const {id}=params;
-  // console.log(id);
-
-  //   const router = useRouter();
-  //   const token = getCookie("token");
-  //   const [aiService, setAiService] = useState(null);
-  //   const [loading, setLoading] = useState(true);
-
-  //   useEffect(() => {
-  //     if (!token) {
-  //       router.push("/");
-  //       return;
-  //     }
-
-  //     const fetchAiService = async () => {
-  //       try {
-  //         const res = await fetch(
-  //           `${process.env.NEXT_PUBLIC_BASE_URL}/blog/${id}`
-  //         );
-  //         if (!res.ok) throw new Error("Failed to fetch AI service");
-  //         const data = await res.json();
-  //         setAiService(data);
-  //       } catch (error) {
-  //         console.error("Fetch error:", error);
-  //         toast.error("Failed to load AI service");
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchAiService();
-  //   }, [id, token, router]);
-
-  //   if (loading) return <div className="p-8">Loading...</div>;
-  //   if (!aiService) return <div className="p-8">AI Service not found</div>;
-
-  //   return (
-  //     <div className="p-6 max-w-4xl mx-auto">
-  //       <h1 className="text-3xl font-bold mb-6">{aiService.heading}</h1>
-  //       <div className="mb-8">
-  //         <Image
-  //           src={aiService.image || "/defaultimage.jpeg"}
-  //           alt={aiService.heading}
-  //           width={800}
-  //           height={450}
-  //           className="rounded-lg"
-  //         />
-  //       </div>
-  //       <div
-  //         className="prose dark:prose-invert max-w-none"
-  //         dangerouslySetInnerHTML={{ __html: aiService.content }}
-  //       />
-  //     </div>
-  //   );
-  // }
   const router = useRouter();
   const { id } = useParams();
   const token = getCookie("token");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [initialData, setInitialData] = useState(null);
-  const [blogId, setBlogId] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
+  const [blogId, setBlogid] = useState(null);
+
+  // console.log("initialData", initialData);
 
   // Redirect to home if token is missing
   useEffect(() => {
@@ -84,47 +31,98 @@ export default function Blogcomponent() {
   const validateForm = (formData) => {
     const errors = {};
 
-    if (!formData.heading?.trim()) errors.heading = "Heading is required";
-    if (!formData.content?.trim()) errors.content = "Content is required";
+    if (!formData.blogTitle?.trim()) errors.heading = "Heading is required";
     if (!formData.slug?.trim()) errors.slug = "Slug is required";
-    if (!formData.shortDescription?.trim())
-      errors.shortDescription = "Short description is required";
     if (!formData.metaTitle?.trim())
       errors.metaTitle = "Meta title is required";
     if (!formData.metaDescription?.trim())
       errors.metaDescription = "Meta description is required";
-    if (!formData.imageFile && !formData.image)
-      errors.image = "Image is required";
+    // if (!formData.imageFile && !formData.image)
+    //   errors.image = "Image is required";
 
     return errors;
   };
 
   // Fetch blog data
   useEffect(() => {
-    const fetchAiService = async () => {
+    const fetchMspService = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/blog/${id}`);
-        if (!res.ok) throw new Error("Failed to fetch blog");
+        if (!res.ok) throw new Error("Failed to fetch MSP service");
         const data = await res.json();
-        setBlogId(data.id);
+        setBlogid(data.id);
+
+        console.log("data",data);
+        
+
+        // Parse the blog_data_raw if it exists
+        const blogDataRaw = data.blog_data_raw
+          ? JSON.parse(data.blog_data_raw)
+          : {};
+
+        console.log("blogDataRaw", blogDataRaw);
+
+        const transformedSections = blogDataRaw.sections?.map(section => ({
+          ...section,
+          points: section.points?.map(point => {
+            // Handle both old (string) and new (object) point formats
+            if (typeof point === 'string') {
+              return {
+                heading: "",
+                description: point
+              };
+            }
+            return {
+              heading: point.heading || "",
+              description: point.description || ""
+            };
+          }) || []
+        })) || [];
+
         setInitialData({
           ...data,
-          short_description: data.short_description || "",
-          meta_title: data.meta_title || "",
-          meta_description: data.meta_description || "",
+          metaTitle: data.meta_title || "",
+          metaDescription: data.meta_description || "",
+          shortDescription: data.short_description || "",
+          featuredImage: data.image || "",
+          blogTitle: data.heading || "",
+          content: data.content || "",
+          authorName: blogDataRaw.authorName || "",
+          authorImage: blogDataRaw.authorImage || "",
+          authorSocialLinks: blogDataRaw.authorSocialLinks || {
+            linkedin: "",
+            github: "",
+            instagram: "",
+            facebook: ""
+          },
+          sections: transformedSections
         });
+
+        // setInitialData({
+        //   ...data,
+        //   metaTitle: data.meta_title || "",
+        //   metaDescription: data.meta_description || "",
+        //   shortDescription: data.short_description || "",
+        //    featuredImage: data.image || "",
+        //   blogTitle: data.heading ||"",
+        //   content: data.content || "",
+        //   // Spread the parsed blog_data_raw into initialData
+        //   ...blogDataRaw,
+        // });
       } catch (error) {
-        console.error("Fetch blog error:", error);
-        toast.error("Failed to load blog data");
+        console.error("Fetch MSP service error:", error);
+        toast.error("Failed to load MSP service data");
       }
     };
 
     if (id) {
-      fetchAiService();
+      fetchMspService();
     }
   }, [id]);
 
   const handleSubmit = async (formData) => {
+    console.log("formdata",formData);
+    
     setIsSubmitting(true);
     setError("");
 
@@ -150,9 +148,30 @@ export default function Blogcomponent() {
       uploadFormData.append("content", formData.content);
       uploadFormData.append("slug", formData.slug);
       uploadFormData.append("short_description", formData.shortDescription);
-      uploadFormData.append("heading", formData.heading);
+      uploadFormData.append("heading", formData.blogTitle);
       uploadFormData.append("type", "blog");
       uploadFormData.append("meta_description", formData.metaDescription);
+
+      const blogData = {
+        authorName: formData.authorName || "",
+        authorImage: formData.authorImage,
+        authorSocialLinks: formData.authorSocialLinks || {
+          linkedin: "",
+          github: "",
+          instagram: "",
+          facebook: "",
+        },
+        introParagraph: formData.shortDescription || "",
+        sections: formData.sections.map(section => ({
+          ...section,
+          points: section.points.map(point => ({
+            heading: point.heading || "",
+            description: point.description || ""
+          }))
+        })),      };
+
+      uploadFormData.append("blog_data_raw", JSON.stringify(blogData));
+
 
       const response = await fetch(`${API_BASE_URL}/blog/update/${blogId}`, {
         method: "POST",
@@ -186,7 +205,7 @@ export default function Blogcomponent() {
   if (!initialData) return <div className="p-8">Loading...</div>;
 
   return (
-    <BlogForm
+    <BlogFormsec
       initialData={initialData}
       onSubmit={handleSubmit}
       isEditing={true}

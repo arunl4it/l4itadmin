@@ -16,6 +16,7 @@ export default function ServiceForm({
 }) {
   const [formData, setFormData] = useState({
     image: "",
+    thumnailimage: "",
     heading: "",
     section1Title2: "",
     section1Content: "",
@@ -52,20 +53,21 @@ export default function ServiceForm({
     metaDescription: "",
     slug: "",
     faqs: [],
-
   });
 
   // console.log("form data",formData.faqs);
-  
+
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
-
+  const [thumbnailFile, setThumbnailFile] = useState(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState("");
   useEffect(() => {
     if (isEditing && initialData) {
       const serviceData = JSON.parse(initialData.blog_data_raw);
-      
+
       const parsedData = {
         image: initialData.image || "",
+        thumnailimage: serviceData.thumnailimage,
         heading: initialData.heading || "",
         section1Title2: serviceData.section1Title2 || "",
         section1Content: initialData.section1Content || "",
@@ -102,7 +104,6 @@ export default function ServiceForm({
         metaDescription: initialData.meta_description || "",
         slug: initialData.slug || "",
         faqs: serviceData.faqs || [],
-
       };
 
       setFormData(parsedData);
@@ -156,7 +157,16 @@ export default function ServiceForm({
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    onSubmit({ ...formData, imageFile });
+    onSubmit({ ...formData, imageFile, thumbnailFile });
+  };
+
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setThumbnailFile(file);
+      const previewUrl = URL.createObjectURL(file);
+      setThumbnailPreview(previewUrl);
+    }
   };
 
   return (
@@ -175,7 +185,9 @@ export default function ServiceForm({
         <form onSubmit={handleFormSubmit} className="space-y-8">
           {/* Section 1 */}
           <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Section 1 - Main Content</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Section 1 - Main Content
+            </h2>
 
             {/* Image Upload */}
             <div className="space-y-4 mb-6">
@@ -213,6 +225,63 @@ export default function ServiceForm({
               </div>
               {errors.image && (
                 <p className="text-sm text-red-500">{errors.image}</p>
+              )}
+            </div>
+            {/* Thumbnail image upload */}
+            <div className="space-y-4 mb-6">
+              <label className="block text-sm font-medium text-gray-700">
+                Thumbnail Image
+              </label>
+              <div className="flex items-center gap-4">
+                {thumbnailPreview ? (
+                  <div className="w-32 h-32 border rounded-md overflow-hidden">
+                    <img
+                      src={thumbnailPreview}
+                      alt="Thumbnail Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : formData.thumnailimage ? (
+                  <div className="w-32 h-32 border rounded-md overflow-hidden">
+                    <img
+                      src={formData.thumnailimage}
+                      alt="Thumbnail Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : null}
+                <div className="flex-1">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleThumbnailChange}
+                    className="border-gray-300 p-5 text-gray-600 mt-2 hidden"
+                    id="thumbnail-upload"
+                  />
+                  <label
+                    htmlFor="thumbnail-upload"
+                    className="cursor-pointer border border-gray-300 rounded-md px-4 py-3 inline-block hover:bg-gray-100 transition-colors"
+                  >
+                    {thumbnailFile
+                      ? thumbnailFile.name
+                      : "Choose a thumbnail image"}
+                  </label>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {thumbnailFile
+                      ? "Click to change image"
+                      : "Or enter URL below"}
+                  </p>
+                  <Input
+                    name="thumnailimage"
+                    value={formData.thumnailimage}
+                    onChange={handleChange}
+                    placeholder="Or enter thumbnail image URL"
+                    className="border-gray-300 p-3 mt-2"
+                  />
+                </div>
+              </div>
+              {errors.thumnailimage && (
+                <p className="text-sm text-red-500">{errors.thumnailimage}</p>
               )}
             </div>
 
@@ -297,7 +366,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[120px]"
               />
               {errors.section1Content21 && (
-                <p className="text-sm text-red-500">{errors.section1Content21}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section1Content21}
+                </p>
               )}
             </div>
 
@@ -331,15 +402,19 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[120px]"
               />
               {errors.section1Content22 && (
-                <p className="text-sm text-red-500">{errors.section1Content22}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section1Content22}
+                </p>
               )}
             </div>
           </div>
 
           {/* Section 2 */}
           <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Section 2 - Engagement Area</h2>
-            
+            <h2 className="text-xl font-semibold mb-4">
+              Section 2 - Engagement Area
+            </h2>
+
             <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 Section Heading (H2)
@@ -375,8 +450,10 @@ export default function ServiceForm({
 
           {/* Section 3 */}
           <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Section 3 - Points Section</h2>
-            
+            <h2 className="text-xl font-semibold mb-4">
+              Section 3 - Points Section
+            </h2>
+
             <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 Section Heading (H2)
@@ -405,7 +482,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1"
               />
               {errors.section3Subheading && (
-                <p className="text-sm text-red-500">{errors.section3Subheading}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section3Subheading}
+                </p>
               )}
             </div>
 
@@ -421,7 +500,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[100px]"
               />
               {errors.section3SubheadingContent && (
-                <p className="text-sm text-red-500">{errors.section3SubheadingContent}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section3SubheadingContent}
+                </p>
               )}
             </div>
 
@@ -434,14 +515,20 @@ export default function ServiceForm({
                   <Input
                     value={point}
                     onChange={(e) =>
-                      handleArrayFieldChange("section3Points", index, e.target.value)
+                      handleArrayFieldChange(
+                        "section3Points",
+                        index,
+                        e.target.value
+                      )
                     }
                     placeholder={`Enter point ${index + 1}`}
                     className="flex-1 border-gray-300 p-4"
                   />
                   <button
                     type="button"
-                    onClick={() => removeArrayFieldItem("section3Points", index)}
+                    onClick={() =>
+                      removeArrayFieldItem("section3Points", index)
+                    }
                     className="p-2 text-red-500 hover:text-red-700"
                   >
                     <Trash2 size={18} />
@@ -471,15 +558,19 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[100px]"
               />
               {errors.section3Conclusion && (
-                <p className="text-sm text-red-500">{errors.section3Conclusion}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section3Conclusion}
+                </p>
               )}
             </div>
           </div>
 
           {/* Section 4 */}
           <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Section 4 - Points Section</h2>
-            
+            <h2 className="text-xl font-semibold mb-4">
+              Section 4 - Points Section
+            </h2>
+
             <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 Section Heading (H2)
@@ -508,7 +599,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1"
               />
               {errors.section4Subheading && (
-                <p className="text-sm text-red-500">{errors.section4Subheading}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section4Subheading}
+                </p>
               )}
             </div>
 
@@ -524,7 +617,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[100px]"
               />
               {errors.section4SubheadingContent && (
-                <p className="text-sm text-red-500">{errors.section4SubheadingContent}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section4SubheadingContent}
+                </p>
               )}
             </div>
 
@@ -537,14 +632,20 @@ export default function ServiceForm({
                   <Input
                     value={point}
                     onChange={(e) =>
-                      handleArrayFieldChange("section4Points", index, e.target.value)
+                      handleArrayFieldChange(
+                        "section4Points",
+                        index,
+                        e.target.value
+                      )
                     }
                     placeholder={`Enter point ${index + 1}`}
                     className="flex-1 border-gray-300 p-4"
                   />
                   <button
                     type="button"
-                    onClick={() => removeArrayFieldItem("section4Points", index)}
+                    onClick={() =>
+                      removeArrayFieldItem("section4Points", index)
+                    }
                     className="p-2 text-red-500 hover:text-red-700"
                   >
                     <Trash2 size={18} />
@@ -574,15 +675,19 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[100px]"
               />
               {errors.section4Conclusion && (
-                <p className="text-sm text-red-500">{errors.section4Conclusion}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section4Conclusion}
+                </p>
               )}
             </div>
           </div>
 
           {/* Section 5 */}
           <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Section 5 - Points Section</h2>
-            
+            <h2 className="text-xl font-semibold mb-4">
+              Section 5 - Points Section
+            </h2>
+
             <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 Section Heading (H2)
@@ -611,7 +716,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1"
               />
               {errors.section5Subheading && (
-                <p className="text-sm text-red-500">{errors.section5Subheading}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section5Subheading}
+                </p>
               )}
             </div>
 
@@ -627,7 +734,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[100px]"
               />
               {errors.section5SubheadingContent && (
-                <p className="text-sm text-red-500">{errors.section5SubheadingContent}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section5SubheadingContent}
+                </p>
               )}
             </div>
 
@@ -640,14 +749,20 @@ export default function ServiceForm({
                   <Input
                     value={point}
                     onChange={(e) =>
-                      handleArrayFieldChange("section5Points", index, e.target.value)
+                      handleArrayFieldChange(
+                        "section5Points",
+                        index,
+                        e.target.value
+                      )
                     }
                     placeholder={`Enter point ${index + 1}`}
                     className="flex-1 border-gray-300 p-4"
                   />
                   <button
                     type="button"
-                    onClick={() => removeArrayFieldItem("section5Points", index)}
+                    onClick={() =>
+                      removeArrayFieldItem("section5Points", index)
+                    }
                     className="p-2 text-red-500 hover:text-red-700"
                   >
                     <Trash2 size={18} />
@@ -677,15 +792,19 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[100px]"
               />
               {errors.section5Conclusion && (
-                <p className="text-sm text-red-500">{errors.section5Conclusion}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section5Conclusion}
+                </p>
               )}
             </div>
           </div>
 
           {/* Section 6 (Optional) */}
           <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Section 6 - Optional Points Section</h2>
-            
+            <h2 className="text-xl font-semibold mb-4">
+              Section 6 - Optional Points Section
+            </h2>
+
             <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 Section Heading (H2)
@@ -714,7 +833,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1"
               />
               {errors.section6Subheading && (
-                <p className="text-sm text-red-500">{errors.section6Subheading}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section6Subheading}
+                </p>
               )}
             </div>
 
@@ -730,7 +851,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[100px]"
               />
               {errors.section6SubheadingContent && (
-                <p className="text-sm text-red-500">{errors.section6SubheadingContent}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section6SubheadingContent}
+                </p>
               )}
             </div>
 
@@ -743,14 +866,20 @@ export default function ServiceForm({
                   <Input
                     value={point}
                     onChange={(e) =>
-                      handleArrayFieldChange("section6Points", index, e.target.value)
+                      handleArrayFieldChange(
+                        "section6Points",
+                        index,
+                        e.target.value
+                      )
                     }
                     placeholder={`Enter point ${index + 1}`}
                     className="flex-1 border-gray-300 p-4"
                   />
                   <button
                     type="button"
-                    onClick={() => removeArrayFieldItem("section6Points", index)}
+                    onClick={() =>
+                      removeArrayFieldItem("section6Points", index)
+                    }
                     className="p-2 text-red-500 hover:text-red-700"
                   >
                     <Trash2 size={18} />
@@ -780,15 +909,19 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[100px]"
               />
               {errors.section6Conclusion && (
-                <p className="text-sm text-red-500">{errors.section6Conclusion}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section6Conclusion}
+                </p>
               )}
             </div>
           </div>
 
           {/* Section 7 (Optional) */}
           <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Section 7 - Technology We Use (Optional)</h2>
-            
+            <h2 className="text-xl font-semibold mb-4">
+              Section 7 - Technology We Use (Optional)
+            </h2>
+
             <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 Section Heading (H2)
@@ -817,7 +950,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1"
               />
               {errors.section7Subheading && (
-                <p className="text-sm text-red-500">{errors.section7Subheading}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section7Subheading}
+                </p>
               )}
             </div>
 
@@ -833,7 +968,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[100px]"
               />
               {errors.section7SubheadingContent && (
-                <p className="text-sm text-red-500">{errors.section7SubheadingContent}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section7SubheadingContent}
+                </p>
               )}
             </div>
 
@@ -846,14 +983,20 @@ export default function ServiceForm({
                   <Input
                     value={point}
                     onChange={(e) =>
-                      handleArrayFieldChange("section7Points", index, e.target.value)
+                      handleArrayFieldChange(
+                        "section7Points",
+                        index,
+                        e.target.value
+                      )
                     }
                     placeholder={`Enter technology ${index + 1}`}
                     className="flex-1 border-gray-300 p-4"
                   />
                   <button
                     type="button"
-                    onClick={() => removeArrayFieldItem("section7Points", index)}
+                    onClick={() =>
+                      removeArrayFieldItem("section7Points", index)
+                    }
                     className="p-2 text-red-500 hover:text-red-700"
                   >
                     <Trash2 size={18} />
@@ -883,15 +1026,19 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1 min-h-[100px]"
               />
               {errors.section7Conclusion && (
-                <p className="text-sm text-red-500">{errors.section7Conclusion}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section7Conclusion}
+                </p>
               )}
             </div>
           </div>
 
           {/* Section 8 */}
           <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Section 8 - Connecting With Us</h2>
-            
+            <h2 className="text-xl font-semibold mb-4">
+              Section 8 - Connecting With Us
+            </h2>
+
             <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 Section Heading (H2)
@@ -920,7 +1067,9 @@ export default function ServiceForm({
                 className="border-gray-300 p-4 text-gray-600 mt-1"
               />
               {errors.section8Subheading && (
-                <p className="text-sm text-red-500">{errors.section8Subheading}</p>
+                <p className="text-sm text-red-500">
+                  {errors.section8Subheading}
+                </p>
               )}
             </div>
 
@@ -954,8 +1103,8 @@ export default function ServiceForm({
             </div>
           </div>
 
-             {/* FAQs Section */}
-             <div className="bg-gray-50 p-6 rounded-lg">
+          {/* FAQs Section */}
+          <div className="bg-gray-50 p-6 rounded-lg">
             <h2 className="text-xl font-semibold mb-4">
               Frequently Asked Questions
             </h2>
