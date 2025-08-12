@@ -98,6 +98,7 @@ export default function CreateBlogPage() {
       const blogData = {
         authorName: formData.authorName || "",
         authorImage: formData.authorImage,
+        thumbnailImage:formData.thumbnailImage,
         authorSocialLinks: formData.authorSocialLinks || {
           linkedin: "",
           github: "",

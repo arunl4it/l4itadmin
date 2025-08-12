@@ -87,8 +87,10 @@ export default function Blogcomponent() {
           featuredImage: data.image || "",
           blogTitle: data.heading || "",
           content: data.content || "",
-          authorName: blogDataRaw.authorName || "",
+          thumbnailImage: blogDataRaw.thumbnailImage || "",
           authorImage: blogDataRaw.authorImage || "",
+          authorImage: blogDataRaw.authorImage || "",
+
           authorSocialLinks: blogDataRaw.authorSocialLinks || {
             linkedin: "",
             github: "",

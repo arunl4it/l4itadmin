@@ -55,7 +55,7 @@ export default function ServiceForm({
     faqs: [],
   });
 
-  console.log("initial",initialData);
+  console.log("initial", initialData);
 
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
