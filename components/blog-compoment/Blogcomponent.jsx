@@ -19,7 +19,7 @@ export default function Blogcomponent() {
   const [formErrors, setFormErrors] = useState({});
   const [blogId, setBlogid] = useState(null);
 
-  // console.log("initialData", initialData);
+  console.log("initialData", initialData);
 
   // Redirect to home if token is missing
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function Blogcomponent() {
         const data = await res.json();
         setBlogid(data.id);
 
-        console.log("data",data);
+        // console.log("data",data);
         
 
         // Parse the blog_data_raw if it exists
@@ -157,6 +157,7 @@ export default function Blogcomponent() {
       const blogData = {
         authorName: formData.authorName || "",
         authorImage: formData.authorImage,
+        thumbnailImage: formData.thumbnailImage || "",
         authorSocialLinks: formData.authorSocialLinks || {
           linkedin: "",
           github: "",
