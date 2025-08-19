@@ -29,7 +29,7 @@ export default function CaseStudy() {
   const getAllCaseApiCall = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/blog/type/case?limit=100`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/blog/type/case?limit=10000`
       );
 
       if (!response.ok) {
@@ -46,7 +46,7 @@ export default function CaseStudy() {
   };
 
   const handleCaseClick = (slug) => {
-    console.log("clicked",slug);
+    console.log("clicked", slug);
     // router.push(`/dashboard/blog/${slug}`);
   };
 
@@ -81,7 +81,9 @@ export default function CaseStudy() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white dark:text-white">Case Studies</h1>
+          <h1 className="text-3xl font-bold text-white dark:text-white">
+            Case Studies
+          </h1>
           <p className="text-slate-300 dark:text-gray-400 mt-2">
             Manage and create new case study posts
           </p>
@@ -97,84 +99,107 @@ export default function CaseStudy() {
       {/* Case Studies Grid */}
       {caseData.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {caseData.map((post) => (
-            <div 
-              key={post.id}
-              className="relative group overflow-hidden rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-300"
-            >
-              <div className="absolute top-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <button
-                      onClick={(e) => e.stopPropagation()}
-                      className="p-2 bg-white dark:bg-gray-700 cursor-pointer rounded-full shadow-md hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 hover:text-red-600 transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This will permanently delete the case study. This action cannot be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel onClick={handleCancel}>
-                        Cancel
-                      </AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteCase(post.id);
-                        }}
-                        className="bg-red-600 hover:bg-red-700"
+          {caseData.map((post) => {
+
+            let parsedata = {};
+            try {
+              parsedata = post?.blog_data_raw
+                ? JSON.parse(post.blog_data_raw)
+                : {};
+              console.log(parsedata);
+            } catch (e) {
+              console.error("Invalid JSON in blog_data_raw:", e);
+              parsedata = {};
+            }
+            console.log("post", parsedata);
+
+
+            return (
+              <div
+                key={post.id}
+                className="relative group overflow-hidden rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-300"
+              >
+                <div className="absolute top-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <button
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-2 bg-white dark:bg-gray-700 cursor-pointer rounded-full shadow-md hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 hover:text-red-600 transition-colors"
                       >
-                        Delete
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This will permanently delete the case study. This
+                          action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={handleCancel}>
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteCase(post.id);
+                          }}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+
+                <Link
+                  href={`/dashboard/case-study/${post?.slug}`}
+                  className="block"
+                >
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <Image
+                      src={parsedata?.section2?.thumbnailImageUrl || post?.image || "/defaultimage.jpeg"}
+                      alt={post?.heading}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  </div>
+
+                  <div className="p-5">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-2">
+                        {post?.heading || "Untitled Case Study"}
+                      </h3>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
+                      {post?.short_description || "No description provided."}
+                    </p>
+                    <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
+                      <span>
+                        {post.updated_at
+                          ? new Date(post.updated_at).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              }
+                            )
+                          : "Unknown date"}
+                      </span>
+                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full">
+                        Case Study
+                      </span>
+                    </div>
+                  </div>
+                </Link>
               </div>
-
-              <Link href={`/dashboard/case-study/${post?.slug}`} className="block">
-                <div className="relative h-48 w-full overflow-hidden">
-                  <Image
-                    src={post?.image || "/defaultimage.jpeg"}
-                    alt={post?.heading}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                </div>
-
-                <div className="p-5">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-2">
-                      {post?.heading || "Untitled Case Study"}
-                    </h3>
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
-                    {post?.short_description || "No description provided."}
-                  </p>
-                  <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
-                    <span>
-                      {post.updated_at
-                        ? new Date(post.updated_at).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                          })
-                        : "Unknown date"}
-                    </span>
-                    <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full">
-                      Case Study
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div className="text-center py-12">

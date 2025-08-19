@@ -14,6 +14,8 @@ export default function ImageDirectory() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [copiedId, setCopiedId] = useState(null);
+  console.log("images",images);
+  
 
   const token = getCookie("token");
 
@@ -25,7 +27,7 @@ export default function ImageDirectory() {
   const fetchImages = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_CREATE_URL}/img`,
+        `${process.env.NEXT_PUBLIC_CREATE_URL}/img?limit=100000`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -74,9 +76,10 @@ export default function ImageDirectory() {
       };
       xhr.onload = () => {
         setIsUploading(false);
-        console.log("status ", xhr.status);
-
+ 
         if (xhr.status === 201) {
+          const response = JSON.parse(xhr.responseText); // ✅ Parse the response
+          console.log("Upload success:", response);
           // Success case
           setSelectedFile(null);
           fetchImages();
