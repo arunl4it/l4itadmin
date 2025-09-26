@@ -70,7 +70,11 @@ export function Leads() {
       accessorKey: "company_name",
       header: "Company",
       cell: ({ row }) => (
-        <div className={`capitalize ${row.getIsSelected() ? "text-black" : "text-white"}`}>
+        <div
+          className={`capitalize ${
+            row.getIsSelected() ? "text-black" : "text-white"
+          }`}
+        >
           {row.getValue("company_name")}
         </div>
       ),
@@ -79,7 +83,11 @@ export function Leads() {
       accessorKey: "first_name",
       header: "First Name",
       cell: ({ row }) => (
-        <div className={`capitalize ${row.getIsSelected() ? "text-black" : "text-white"}`}>
+        <div
+          className={`capitalize ${
+            row.getIsSelected() ? "text-black" : "text-white"
+          }`}
+        >
           {row.getValue("first_name")}
         </div>
       ),
@@ -88,7 +96,11 @@ export function Leads() {
       accessorKey: "last_name",
       header: "Last Name",
       cell: ({ row }) => (
-        <div className={`capitalize ${row.getIsSelected() ? "text-black" : "text-white"}`}>
+        <div
+          className={`capitalize ${
+            row.getIsSelected() ? "text-black" : "text-white"
+          }`}
+        >
           {row.getValue("last_name")}
         </div>
       ),
@@ -108,7 +120,11 @@ export function Leads() {
         );
       },
       cell: ({ row }) => (
-        <div className={`lowercase ${row.getIsSelected() ? "text-black" : "text-white"}`}>
+        <div
+          className={`lowercase ${
+            row.getIsSelected() ? "text-black" : "text-white"
+          }`}
+        >
           {row.getValue("business_email")}
         </div>
       ),
@@ -124,12 +140,24 @@ export function Leads() {
     },
     {
       accessorKey: "submission_date",
-      header: "Submission Date",
+      header: "Date",
       cell: ({ row }) => {
         const date = new Date(row.getValue("submission_date"));
         return (
           <div className={row.getIsSelected() ? "text-black" : "text-white"}>
             {date.toLocaleDateString()}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "message",
+      header: "Message",
+      cell: ({ row }) => {
+        const date = new Date(row.getValue("message"));
+        return (
+          <div className={row.getIsSelected() ? "text-black" : "text-white"}>
+            {row.getValue("message")}
           </div>
         );
       },
@@ -194,8 +222,8 @@ export function Leads() {
           }
         );
         const result = await response.json();
-        console.log("result",result);
-        
+        console.log("result", result);
+
         setData(result);
       } catch (error) {
         console.error("Error fetching contact info:", error);
@@ -212,7 +240,9 @@ export function Leads() {
           placeholder="Filter emails..."
           value={table.getColumn("business_email")?.getFilterValue() ?? ""}
           onChange={(event) =>
-            table.getColumn("business_email")?.setFilterValue(event.target.value)
+            table
+              .getColumn("business_email")
+              ?.setFilterValue(event.target.value)
           }
           className="max-w-sm text-white"
         />
